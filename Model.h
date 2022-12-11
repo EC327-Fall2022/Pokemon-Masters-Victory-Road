@@ -33,7 +33,8 @@ PokemonGym* g2;
     void Display(View& view);
     void ShowStatus();
     int Gettime();
-void Trainer_in_wild();    
+void Trainer_in_wild();
+void NewCommand();    
 };
 #endif
 

@@ -1,7 +1,7 @@
 #include "Model.h"
 #include <ctime>
 #include <list>
-
+#include "Input_Handling.h"
 using namespace std;
 
 Model::Model(){
@@ -219,3 +219,118 @@ else if ((*iter3)->followed2 || (*iter3)->followed1)
 }
 }
 
+void Model::NewCommand(){
+
+char type;
+int iden;
+int loc_x;
+int loc_y;
+bool valid = true;
+
+cin >> type >> iden >> loc_x >> loc_y;
+
+try {
+if (! (type == 'c' || type == 'g' ||type == 't' || type == 'w'))
+{
+valid = false;
+throw Invalid_Input("Not an object type");
+}
+if (iden > 9)
+throw Invalid_Input("maximum number of this object, can't create more");
+if (type == 'w')
+{
+list <WildPokemon*>::iterator iw;
+for (iw = wildpokemon_ptrs.begin() ; iw != wildpokemon_ptrs.end() ; iw++){
+if ((*iw)->GetId() == iden){
+valid = false;
+throw Invalid_Input("Existing Id");
+}
+}
+if(valid && !(loc_x > 20 || loc_x <0 || loc_y >20 || loc_y<0))
+{
+WildPokemon* wx; 
+Point2D  pwx(loc_x, loc_y);
+wx = new WildPokemon("user's wild pokemon", 5,2,false,iden, pwx);
+wildpokemon_ptrs.push_back(wx);
+object_ptrs.push_back(wx);
+active_ptrs.push_back(wx);
+
+}
+else{
+valid = false;
+throw Invalid_Input("Not a valid grid location");
+} 
+
+}
+if (type == 'c')
+{
+list <PokemonCenter*>::iterator ic;
+for (ic = center_ptrs.begin() ; ic != center_ptrs.end() ; ic++){
+if ((*ic)->GetId() == iden){
+valid = false;
+throw Invalid_Input("Existing Id");
+}}
+if(valid && !(loc_x > 20 || loc_x <0 || loc_y >20 || loc_y<0))
+{
+PokemonCenter* cx;
+Point2D pcx(loc_x,loc_y);
+cx = new PokemonCenter(iden, 1, 10, pcx);
+object_ptrs.push_back(cx);
+center_ptrs.push_back(cx);
+active_ptrs.push_back(cx);
+}
+else{
+valid = false;
+throw Invalid_Input("Not a valid grid location");
+}
+}
+if (type == 'g')
+{
+list <PokemonGym*>::iterator ig;
+for (ig= gym_ptrs.begin() ; ig != gym_ptrs.end() ; ig++){
+if ((*ig)->GetId() == iden){
+valid = false;
+throw Invalid_Input("Existing Id");
+}
+}
+if(valid && ! (loc_x > 20 || loc_x <0 || loc_y >20 || loc_y<0)){
+PokemonGym* gx;
+Point2D  pgx(loc_x,loc_y);
+gx = new PokemonGym(5, 2, 3, 1, iden, pgx);
+object_ptrs.push_back(gx);
+gym_ptrs.push_back(gx);
+active_ptrs.push_back(gx);
+
+}
+else{
+valid = false;
+throw Invalid_Input("Not a valid grid location");
+}
+}
+
+if (type == 't')
+{
+list < Trainer*> :: iterator it;
+for (it = trainer_ptrs.begin() ; it != trainer_ptrs.end() ; it++){
+if((*it)->GetId() == iden){
+valid = false;
+throw Invalid_Input("Existing Id");
+}}
+if (valid && ! (loc_x > 20 || loc_x <0 || loc_y >20 || loc_y<0)){
+Trainer* tx;
+Point2D ptx(loc_x, loc_y);
+tx = new Trainer("User's trainer", iden, 'T' , 1, ptx);
+object_ptrs.push_back(tx);
+trainer_ptrs.push_back(tx);
+active_ptrs.push_back(tx);
+}
+else{
+valid = false;
+throw Invalid_Input("Not a valid grid location");
+}
+}}
+ catch (Invalid_Input& except){
+                cout << "Invalid input- " <<except.msg_ptr <<endl;
+       }
+
+}
