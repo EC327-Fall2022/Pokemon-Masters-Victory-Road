@@ -26,14 +26,14 @@ int main() {
       
      do {
      cout << "Enter a command: " <<endl;
-     cin >> command;
      
-     
+     if(cin >> command)
      save = command [0];
-    
+        
                 
           try {
           if (!(save == "n" || save == "m" || save == "c" || save == "g" || save == "s" || save ==  "p" || save == "b" || save  == "q" || save == "a" || save == "r")){
+            cin.ignore(10000, '\n');
             input = false;	
             throw Invalid_Input("Not a  command");
        }
